@@ -36,11 +36,19 @@ class ApiTestCase(unittest.TestCase):
 
         self.assertEqual(
             call.get(
-                'https://api-lon-b.elastichosts.com/servers/info',
+                'https://api-lon-b.elastichosts.com/drives/info',
                 auth=(eh.USER, eh.SECRET_KEY),
                 headers={'Accept': 'application/json'}
              ),
             mock_requests.mock_calls[0])
+
+        self.assertEqual(
+            call.get(
+                'https://api-lon-b.elastichosts.com/servers/info',
+                auth=(eh.USER, eh.SECRET_KEY),
+                headers={'Accept': 'application/json'}
+             ),
+            mock_requests.mock_calls[1])
 
     @patch.object(eh, 'requests')
     def test_drives_for_servers(self, mock_requests):

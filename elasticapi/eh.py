@@ -29,15 +29,23 @@ def drives_for_servers(servers_info):
     return output
 
 def servers_info():
-    url = '/'.join([API, 'servers/info'])
-    resp = requests.get(
-               url,
+    drives_url = '/'.join([API, 'drives/info'])
+    drives_resp = requests.get(
+               drives_url,
                auth=(USER, SECRET_KEY),
                headers={'Accept': 'application/json'})
-    if resp.status_code == 200:
-        return drives_for_servers(json.loads(resp.text))
+
+    servers_url = '/'.join([API, 'servers/info'])
+    servers_resp = requests.get(
+               servers_url,
+               auth=(USER, SECRET_KEY),
+               headers={'Accept': 'application/json'})
+
+    if servers_resp.status_code == 200 and drives_resp.status_code == 200:
+        return drives_for_servers(json.loads(servers_resp.text))
     else:
-        resp.raise_for_status()
+        drives_resp.raise_for_status()
+        servers_resp.raise_for_status()
 
 if __name__ == '__main__':
     print servers_info()
