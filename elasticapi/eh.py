@@ -25,7 +25,7 @@ def drives_for_servers(servers_info):
         drives = filter(lambda key: key.startswith('block'), item.keys())
         for key in drives:
             drive_uuid = item[key]
-            output[item['name']].append(drive_uuid)
+            output[item['name']].append(drive_name(drive_uuid))
     return output
 
 def servers_info():

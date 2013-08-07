@@ -42,11 +42,18 @@ class ApiTestCase(unittest.TestCase):
              ),
             mock_requests.mock_calls[0])
 
-    def test_drives_for_servers(self):
+    @patch.object(eh, 'requests')
+    def test_drives_for_servers(self, mock_requests):
+        mock_requests.get.side_effect = [
+            Mock(text='{"name": "scala"}', status_code=200),
+            Mock(text='{"name": "ruby"}', status_code=200),
+            Mock(text='{"name": "drive1"}', status_code=200),
+            Mock(text='{"name": "python"}', status_code=200)]
+
         self.assertEqual(
-            {'scala' : ['cb3d8f25'],
-             'ruby'  : ['39f1c214', '0f6155a5'],
-             'python': ['b3370ebd']},
+            {'scala' : ['scala'],
+             'ruby'  : ['ruby', 'drive1'],
+             'python': ['python']},
             eh.drives_for_servers(MOCK_SERVERS_INFO))
 
     @patch.object(eh, 'requests')
