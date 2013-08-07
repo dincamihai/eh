@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import json
 import requests
@@ -54,4 +56,5 @@ def initialize_app(app):
     app.register_blueprint(root)
 
 if __name__ == '__main__':
-    print servers_info()
+    for name, drives in servers_info().items():
+        print '%s: ' %name + ', '.join(drives)
