@@ -23,15 +23,17 @@ MOCK_SERVERS_INFO = [
   }
 ]
 
+MOCK_DRIVE_INFO = {
+    "drive": "39f1c214",
+    "name": "ruby"
+}
+
 class ApiTestCase(unittest.TestCase):
 
     @patch.object(eh, 'requests')
     def test_request_params(self, mock_requests):
         eh.servers_info()
 
-        mock_requests.get = Mock(return_value=json.dumps([
-            'drive1', 'drive2'
-        ]))
         self.assertEqual(
             call.get(
                 'https://api-lon-b.elastichosts.com/servers/info',
@@ -46,3 +48,9 @@ class ApiTestCase(unittest.TestCase):
              'ruby'  : ['39f1c214', '0f6155a5'],
              'python': ['b3370ebd']},
             eh.drives_for_servers(MOCK_SERVERS_INFO))
+
+    @patch.object(eh, 'requests')
+    def test_drive_name(self, mock_requests):
+        response_mock = Mock(text=json.dumps(MOCK_DRIVE_INFO), status_code=200)
+        mock_requests.get = Mock(return_value=response_mock)
+        self.assertEqual('ruby', eh.drive_name('39f1c214'))
