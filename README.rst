@@ -21,11 +21,17 @@ Instructions
     $ export USER_UUID=<your user UUID>
     $ export SECRET_KEY=<your secret key>
 
-4. Run the application server::
+4. Run the application
 
-   $ cd elasticapi
-   $ gunicorn manage:app
+    as a server::
 
-5. View output in browser:
+    $ cd elasticapi
+    $ gunicorn manage:app
 
-   http://localhost:8000
+    and view the output in browser: http://localhost:8000
+
+    OR
+
+    in terminal::
+
+    $ ./eh.py
