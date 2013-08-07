@@ -4,6 +4,25 @@ from mock import Mock, patch, call
 
 from elasticapi import eh
 
+MOCK_SERVERS_INFO = [
+  {
+    "block:0": "cb3d8f25",
+    "name": "scala",
+    "server": "cf299f87"
+  },
+  {
+    "block:0": "39f1c214",
+    "block:1": "0f6155a5",
+    "name": "ruby",
+    "server": "d4daadad"
+  },
+  {
+    "block:0": "b3370ebd",
+    "name": "python",
+    "server": "b58e6f40"
+  }
+]
+
 class ApiTestCase(unittest.TestCase):
 
     @patch.object(eh, 'requests')
@@ -15,8 +34,15 @@ class ApiTestCase(unittest.TestCase):
         ]))
         self.assertEqual(
             call.get(
-                'https://api-lon-b.elastichosts.com/drives/list',
+                'https://api-lon-b.elastichosts.com/servers/info',
                 auth=(eh.USER, eh.SECRET_KEY),
                 headers={'Accept': 'application/json'}
              ),
             mock_requests.mock_calls[0])
+
+    def test_drives_for_servers(self):
+        self.assertEqual(
+            {'scala' : ['cb3d8f25'],
+             'ruby'  : ['39f1c214', '0f6155a5'],
+             'python': ['b3370ebd']},
+            eh.drives_for_servers(MOCK_SERVERS_INFO))
