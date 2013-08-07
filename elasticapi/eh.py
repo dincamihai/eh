@@ -11,7 +11,10 @@ def servers_info():
                url,
                auth=(USER, SECRET_KEY),
                headers={'Accept': 'application/json'})
-    return resp.text
+    if resp.status_code == 200:
+        return resp.text
+    else:
+        resp.raise_for_status()
 
 if __name__ == '__main__':
     print servers_info()
