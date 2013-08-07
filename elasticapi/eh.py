@@ -8,24 +8,14 @@ API = "https://api-lon-b.elastichosts.com"
 USER = os.environ.get('USER_UUID', '')
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
 
-def drive_name(drive_uuid):
-    url = '/'.join([API, 'drives/{DRIVE}/info'.format(DRIVE=drive_uuid)])
-    resp = requests.get(
-               url,
-               auth=(USER, SECRET_KEY),
-               headers={'Accept': 'application/json'})
-    if resp.status_code == 200:
-        return json.loads(resp.text)['name']
-    else:
-        return ''
-
-def drives_for_servers(servers_info):
+def drives_for_servers(servers_info, drives_info):
     output = defaultdict(list)
+    drives_mapping = dict([[item['drive'], item['name']] for item in drives_info])
     for item in servers_info:
         drives = filter(lambda key: key.startswith('block'), item.keys())
         for key in drives:
             drive_uuid = item[key]
-            output[item['name']].append(drive_name(drive_uuid))
+            output[item['name']].append(drives_mapping.get(drive_uuid))
     return output
 
 def servers_info():
@@ -42,7 +32,9 @@ def servers_info():
                headers={'Accept': 'application/json'})
 
     if servers_resp.status_code == 200 and drives_resp.status_code == 200:
-        return drives_for_servers(json.loads(servers_resp.text))
+        return drives_for_servers(
+                json.loads(servers_resp.text),
+                json.loads(drives_resp.text))
     else:
         drives_resp.raise_for_status()
         servers_resp.raise_for_status()

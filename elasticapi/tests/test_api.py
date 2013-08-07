@@ -23,10 +23,24 @@ MOCK_SERVERS_INFO = [
   }
 ]
 
-MOCK_DRIVE_INFO = {
+MOCK_DRIVES_INFO = [
+  {
     "drive": "39f1c214",
     "name": "ruby"
-}
+  },
+  {
+    "drive": "b3370ebd",
+    "name": "python"
+  },
+  {
+    "drive": "cb3d8f25",
+    "name": "scala",
+  },
+  {
+    "drive": "0f6155a5",
+    "name": "drive1"
+  }
+]
 
 class ApiTestCase(unittest.TestCase):
 
@@ -52,20 +66,10 @@ class ApiTestCase(unittest.TestCase):
 
     @patch.object(eh, 'requests')
     def test_drives_for_servers(self, mock_requests):
-        mock_requests.get.side_effect = [
-            Mock(text='{"name": "scala"}', status_code=200),
-            Mock(text='{"name": "ruby"}', status_code=200),
-            Mock(text='{"name": "drive1"}', status_code=200),
-            Mock(text='{"name": "python"}', status_code=200)]
-
+        output = eh.drives_for_servers(MOCK_SERVERS_INFO, MOCK_DRIVES_INFO)
+        assert len(mock_requests.get.mock_calls) == 0, 'no requests needed'
         self.assertEqual(
             {'scala' : ['scala'],
              'ruby'  : ['ruby', 'drive1'],
              'python': ['python']},
-            eh.drives_for_servers(MOCK_SERVERS_INFO))
-
-    @patch.object(eh, 'requests')
-    def test_drive_name(self, mock_requests):
-        response_mock = Mock(text=json.dumps(MOCK_DRIVE_INFO), status_code=200)
-        mock_requests.get = Mock(return_value=response_mock)
-        self.assertEqual('ruby', eh.drive_name('39f1c214'))
+            output)
