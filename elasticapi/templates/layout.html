@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>ElasticHostsAPI</title>
+  </head>
+
+  <body>
+      {% for name, drives in info.iteritems() %}
+      <h3> {{- name -}} </h3>
+      <ul>
+      {% for drive in  drives %}
+          <li> {{- drive -}} </li>
+      {% endfor %}
+      </ul>
+      {% endfor %}
+  </body>
+</html>

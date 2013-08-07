@@ -1,12 +1,17 @@
-import requests
 import os
 import json
+import requests
+import flask
 
 from collections import defaultdict
+
+from flask import Flask, render_template, request
 
 API = "https://api-lon-b.elastichosts.com"
 USER = os.environ.get('USER_UUID', '')
 SECRET_KEY = os.environ.get('SECRET_KEY', '')
+
+root = flask.Blueprint("index", __name__)
 
 def drives_for_servers(servers_info, drives_info):
     output = defaultdict(list)
@@ -38,6 +43,15 @@ def servers_info():
     else:
         drives_resp.raise_for_status()
         servers_resp.raise_for_status()
+
+
+@root.route("/")
+def home():
+    app = flask.current_app
+    return render_template('layout.html', **{'info': servers_info()})
+
+def initialize_app(app):
+    app.register_blueprint(root)
 
 if __name__ == '__main__':
     print servers_info()
