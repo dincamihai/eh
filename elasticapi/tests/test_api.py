@@ -14,8 +14,9 @@ class ApiTestCase(unittest.TestCase):
             'drive1', 'drive2'
         ]))
         self.assertEqual(
-            [call.get(
-                'https://api-lon-p.elastichosts.com/drives/list',
-                auth=('dincamihai', 'SECRET_KEY')
-             )],
-            mock_requests.mock_calls)
+            call.get(
+                'https://api-lon-b.elastichosts.com/drives/list',
+                auth=(eh.USER, eh.SECRET_KEY),
+                headers={'Accept': 'application/json'}
+             ),
+            mock_requests.mock_calls[0])
