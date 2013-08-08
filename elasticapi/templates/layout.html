@@ -3,16 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>ElasticHostsAPI</title>
+    <script src="{{ url_for('static', filename='lib/jquery-1.10.2/jquery-1.10.2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/bootstrap3/js/bootstrap.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{{url_for('static', filename='lib/bootstrap3/css/bootstrap.min.css')}}">
   </head>
 
   <body>
-      {% for name, drives in info.iteritems() %}
-      <h3> {{- name -}} </h3>
-      <ul>
-      {% for drive in  drives %}
-          <li> {{- drive -}} </li>
-      {% endfor %}
-      </ul>
-      {% endfor %}
+    <div id="container" class="container">
+      <h3>List of machines and drives:</h3>
+      <ul class="nav nav-pills nav-stacked">
+        {% for name, drives in info.iteritems() %}
+        <li class="active">
+          <a href="#">
+            {% for drive in  drives %}
+              <span class="badge pull-right">{{ drive }}</span>
+            {% endfor %}
+            {{ name }}
+          </a>
+        </li>
+        {% endfor %}
+    </div>
   </body>
 </html>
